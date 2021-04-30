@@ -440,12 +440,20 @@ function binaryAgent(str) {
 // Remember, you can access object properties through either dot notation or [] notation.
 
 function truthCheck(collection, pre) {
-    return pre;
-  }
-  
-  truthCheck([{"user": "Tinky-Winky", "sex": "male"}, {"user": "Dipsy", "sex": "male"}, {"user": "Laa-Laa", "sex": "female"}, {"user": "Po", "sex": "female"}], "sex");
+  // Is everyone being true?
+  return collection.every(obj => obj[pre]);
+}
 
-  
+truthCheck(
+  [
+    { user: "Tinky-Winky", sex: "male" },
+    { user: "Dipsy", sex: "male" },
+    { user: "Laa-Laa", sex: "female" },
+    { user: "Po", sex: "female" }
+  ],
+  "sex"
+);
+
 
 //   19.Intermediate Algorithm Scripting: Arguments Optional
 // Create a function that sums two arguments together. If only one argument is provided, then return a function that expects one argument and returns the sum.
@@ -458,16 +466,26 @@ function truthCheck(collection, pre) {
 
 // sumTwoAnd(3) returns 5.
 
-// If either argument isn't a valid number, return undefined.
+// test here
+addTogether(2, 3);
 
 function addTogether() {
-    return false;
+  const [first, second] = Object.values(arguments);
+  // Check 1
+  if (typeof first !== "number") {
+    return undefined;
   }
-  
-  addTogether(2,3);
-
-
-
+  // Function to add 2
+  const addSecond = (second) => typeof second === "number" ? first + second : undefined;
+  // Check 2
+  if (second !== undefined) {
+    return addSecond(second);
+  } else {
+    return addSecond
+  }
+}
+// test
+addTogether(2, 3);
 
 
 //   20.Intermediate Algorithm Scripting: Make a Person
@@ -481,16 +499,35 @@ function addTogether() {
 //   setFullName(firstAndLast)
 //   Run the tests to see the expected output for each method. The methods that take an argument must accept only one argument and it has to be a string. These methods must be the only available means of interacting with the object.
 var Person = function(firstAndLast) {
-    // Only change code below this line
-    // Complete the method below and implement the others similarly
-    this.getFullName = function() {
-      return "";
-    };
-    return firstAndLast;
+  var fullName = firstAndLast;
+
+  this.getFirstName = function() {
+    return fullName.split(" ")[0];
   };
-  
-  var bob = new Person('Bob Ross');
-  bob.getFullName();
+
+  this.getLastName = function() {
+    return fullName.split(" ")[1];
+  };
+
+  this.getFullName = function() {
+    return fullName;
+  };
+
+  this.setFirstName = function(name) {
+    fullName = name + " " + fullName.split(" ")[1];
+  };
+
+  this.setLastName = function(name) {
+    fullName = fullName.split(" ")[0] + " " + name;
+  };
+
+  this.setFullName = function(name) {
+    fullName = name;
+  };
+};
+
+var bob = new Person("Bob Ross");
+bob.getFullName();
 
 
 //   21 Intermediate Algorithm Scripting: Map the Debris
@@ -510,8 +547,30 @@ function orbitalPeriod(arr) {
     return arr;
   }
   
-  orbitalPeriod([{name : "sputnik", avgAlt : 35873.5553}]);
+ 
 
+  function orbitalPeriod(arr) {
+    var GM = 398600.4418;
+    var earthRadius = 6367.4447;
+    var a = 2 * Math.PI;
+    var newArr = [];
+  
+    var getOrbPeriod = function(obj) {
+      var c = Math.pow(earthRadius + obj.avgAlt, 3);
+      var b = Math.sqrt(c / GM);
+      var orbPeriod = Math.round(a * b);
+      // create new object
+      return {name: obj.name, orbitalPeriod: orbPeriod};
+    };
+  
+    for (var elem in arr) {
+      newArr.push(getOrbPeriod(arr[elem]));
+    }
+  
+    return newArr;
+  }
+  
+ orbitalPeriod([{name : "sputnik", avgAlt : 35873.5553}]);
 //   22 JavaScript Algorithms and Data Structures Projects: Palindrome Checker
 // Return true if the given string is a palindrome. Otherwise, return false.
 
@@ -524,9 +583,13 @@ function orbitalPeriod(arr) {
 // We'll also pass strings with special symbols, such as "2A3*3a2", "2A3 3a2", and "2_A3*3#A2".
 
 function palindrome(str) {
-    return true;
-  }
-  
-  
-  
-  palindrome("eye");
+  return (
+    str.replace(/[\W_]/g, "").toLowerCase() ===
+    str
+      .replace(/[\W_]/g, "")
+      .toLowerCase()
+      .split("")
+      .reverse()
+      .join("")
+  );
+}
